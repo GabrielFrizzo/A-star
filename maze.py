@@ -1,3 +1,4 @@
+from copy import deepcopy
 from map_parser import parse_entry, build_output
 
 POSITIONS = {
@@ -11,20 +12,26 @@ POSITIONS = {
     '%': (-1,-1),
 }
 
+ROTATIONS = {
+    'v': ('\\', '#'),
+    '^': ('/', '%'),
+    '>': ('\\', '/'),
+    '<': ('#', '%'),
+    '\\': ('v', '>'),
+    '/': ('^', '>'),
+    '#': ('v', '<'),
+    '%': ('^', '<'),
+}
+
 class Maze:
-    def __init__(self, matrix=None, height=None, width=None, agent=None):
-        if matrix:
-            self.matrix = matrix
-            self.height = height or len(matrix)
-            self.width = width or len(matrix[0])
-            self.agent = agent or self._find_agent()
+    def __init__(self, matrix):
+        self.matrix = matrix
+        self.height = len(matrix)
+        self.width = len(matrix[0])
+        self.agent = self._find_agent()
 
     def from_txt(entry):
-        maze = Maze()
-        maze.height, maze.width, maze.matrix = parse_entry(entry)
-        maze.agent = maze._find_agent()
-
-        return maze
+        return Maze(parse_entry(entry)[2])
 
     def __repr__(self):
         return build_output(self.matrix)
@@ -40,3 +47,30 @@ class Maze:
             return '*'
 
         return self.matrix[y][x]
+
+    def rotations(self):
+        current_dir = self.agent['dir']
+        current_pos = self.agent['pos']
+        nx_states = []
+
+        for direction in ROTATIONS[current_dir]:
+            new_matrix = deepcopy(self.matrix)
+            new_matrix[current_pos['y']][current_pos['x']] = direction
+            new_maze = Maze(new_matrix)
+            nx_states.append({'cost': 1, 'maze': new_maze})
+
+        return nx_states
+
+    def movement(self):
+        current_dir = self.agent['dir']
+        current_pos = self.agent['pos']
+
+        next_pos = [sum(x) for x in zip(current_pos.values(),POSITIONS[current_dir])]
+        if self.pos(next_pos[0], next_pos[1]) != '*':
+            new_matrix = deepcopy(self.matrix)
+            new_matrix[current_pos['y']][current_pos['x']] = '.'
+            new_matrix[next_pos[1]][next_pos[0]] = current_dir
+
+            new_maze = Maze(new_matrix)
+            cost = 1.25 if any(POSITIONS[current_dir]) else 1
+            return {'cost': cost, 'maze': new_maze} 
