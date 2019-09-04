@@ -85,7 +85,7 @@ class Maze:
                     }
         if self.pos(next_pos['x'], next_pos['y']) != '*':
             new_maze = self.copy(next_pos)
-            cost = 1 if 0 in POSITIONS[current_dir] else 1.25
+            cost = 1 if 0 in POSITIONS[current_dir] else 1.5
             return {'cost': cost, 'maze': new_maze}
 
     def solved(self):
