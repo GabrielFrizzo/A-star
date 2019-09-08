@@ -95,7 +95,7 @@ class Maze:
 
     def euclid_dist(self):
         agent_pos = self.agent['pos']
-        obj_pos = self._find_objective
+        obj_pos = self.obj_pos
         return sqrt((agent_pos['x']**2 -obj_pos['x'])**2 + \
                     (agent_pos['y']**2 -obj_pos['y'])**2)
 
@@ -104,3 +104,6 @@ class Maze:
 
     def __eq__(self, other):
         return hash(self) == hash(other)
+
+    def __lt__(self, other):
+        return True
