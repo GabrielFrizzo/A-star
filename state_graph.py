@@ -1,8 +1,6 @@
 from heapq import heappush, heappop
 from collections import deque, defaultdict
 from maze import Maze
-from sys import stdin, argv
-from os import system
 
 class StateGraph:
     def __init__(self, txt_entry):
@@ -73,13 +71,3 @@ class StateGraph:
         while predecessors[path[0]]:
             path.appendleft(predecessors[path[0]])
         return list(path)
-
-if __name__ == '__main__':
-    with open(argv[1], 'r') as file:
-        graph = StateGraph(file.read())
-    path, cost = graph.astar()
-    for m in path:
-        system("clear")
-        print(m)
-        input("Aperte ENTER para o próximo estado")
-    print("Custo total:", cost)
