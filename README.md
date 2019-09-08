@@ -20,4 +20,4 @@ Map format:
 
 executing(python > 3.4):
 
-python state_graph.py teste
+python state_graph.py testes/teste1
