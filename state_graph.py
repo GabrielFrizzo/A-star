@@ -14,7 +14,7 @@ class StateGraph:
     def deepening_search(self):
         depth = 0
         path = False
-        while not path:
+        while not path and depth < self.root.height*self.root.width*8:
             depth += 1
             path = self._DFS(depth)
         return path
@@ -49,7 +49,6 @@ class StateGraph:
         costs = defaultdict(lambda: float("INF"))
         costs[self.root] = 0
         heap = [(0, self.root)]
-
         while heap:
             curr_cost, curr_node = heappop(heap)
             if curr_node.solved():

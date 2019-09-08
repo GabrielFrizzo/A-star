@@ -96,8 +96,28 @@ class Maze:
     def euclid_dist(self):
         agent_pos = self.agent['pos']
         obj_pos = self.obj_pos
-        return sqrt((agent_pos['x']**2 -obj_pos['x'])**2 + \
-                    (agent_pos['y']**2 -obj_pos['y'])**2)
+        return sqrt((agent_pos['x']-obj_pos['x'])**2 + \
+                    (agent_pos['y']-obj_pos['y'])**2)
+
+    def euclid_with_dir(self):
+        agent_pos = self.agent['pos']
+        x_dir, y_dir = POSITIONS[self.agent['dir']]
+        obj_pos = self.obj_pos
+        dist = self.euclid_dist()
+
+        xdelta = obj_pos['x'] - agent_pos['x']
+        ydelta = obj_pos['y'] - agent_pos['y']
+        if xdelta > 0:
+            dist += int(x_dir == -1)
+        elif xdelta < 0:
+            dist += int(x_dir == 1)
+
+        if ydelta > 0:
+            dist += int(y_dir == -1)
+        elif ydelta < 0:
+            dist += int(y_dir == 1)
+
+        return dist
 
     def __hash__(self):
         return hash((self.agent['pos']['x'], self.agent['pos']['y'], self.agent['dir']))

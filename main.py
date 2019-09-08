@@ -1,6 +1,7 @@
 from sys import stdin, argv
 from os import system
 from state_graph import StateGraph
+from maze import Maze
 
 try:
     with open(argv[1], 'r') as file:
@@ -26,6 +27,7 @@ try:
             break
 except:
     print("Impossível encontrar um caminho")
+    exit()
 
 for maze in path:
     system("clear")
