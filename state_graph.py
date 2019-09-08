@@ -25,6 +25,7 @@ class StateGraph:
         predecessors = {}
         costs = defaultdict(lambda: float("INF"))
 
+        visits = 0
         while stack:
             curr_state, curr_cost, pred = stack.pop()
             if curr_cost > depth or curr_cost >= costs[curr_state]:
@@ -42,7 +43,8 @@ class StateGraph:
 
         visited.add(node)
         for nbor in StateGraph.next_states(node):
-            stack.append((nbor['maze'], cost+nbor['cost'], node))
+            if nbor['maze'] not in visited:
+                stack.append((nbor['maze'], cost+nbor['cost'], node))
 
     def astar(self, heuristic=Maze.euclid_dist):
         predecessors = {self.root: None}
