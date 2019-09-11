@@ -1,7 +1,13 @@
 from sys import stdin, argv
-from os import system
+from os import system, name
 from state_graph import StateGraph
 from maze import Maze
+
+def clear_screen():
+    if name == 'posix':
+        system('clear')
+    else:
+        system('cls')
 
 try:
     with open(argv[1], 'r') as file:
@@ -10,7 +16,7 @@ except:
     print("Falha ao ler o arquivo, verifique o formato passado")
     exit()
 
-system("clear")
+clear_screen()
 
 print("Escolha um dos algoritmos disponíveis:")
 print("1 - A*")
@@ -30,7 +36,7 @@ except:
     exit()
 
 for maze in path:
-    system("clear")
+    clear_screen()
     print(maze)
     input("Aperte ENTER para o próximo estado")
 print("Custo total:", cost)
