@@ -99,7 +99,7 @@ class Maze:
         return sqrt((agent_pos['x']-obj_pos['x'])**2 + \
                     (agent_pos['y']-obj_pos['y'])**2)
 
-    def euclid_with_dir(self):
+    def euclid_with_dir(self): # tentativa de melhorar a heuristica. Parece funcionar
         agent_pos = self.agent['pos']
         x_dir, y_dir = POSITIONS[self.agent['dir']]
         obj_pos = self.obj_pos

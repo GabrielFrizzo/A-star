@@ -14,43 +14,37 @@ class StateGraph:
     def deepening_search(self):
         depth = 0
         path = False
-        while not path and depth < self.root.height*self.root.width*8:
-            depth += 1
-            path = self._DFS(depth)
-        return path
-
-    def _DFS(self, depth):
-        visited = set()
-        stack = deque([(self.root,0, None)])
-        predecessors = {}
         costs = defaultdict(lambda: float("INF"))
 
-        visits = 0
+        while not path and depth < self.root.height*self.root.width*8:
+            depth += 1
+            path = self._DLS(depth, costs)
+        return path
+
+    def _DLS(self, depth, costs):
+        stack = deque([(self.root,0, None, 0)])
+        predecessors = {}
+
         while stack:
-            curr_state, curr_cost, pred = stack.pop()
-            if curr_cost > depth or curr_cost >= costs[curr_state]:
+            curr_state, curr_cost, pred, curr_depth = stack.pop()
+            if curr_cost > costs[curr_state] or curr_depth > depth:
                 continue
             predecessors[curr_state] = pred
             costs[curr_state] = curr_cost
 
-            if StateGraph._DFSUtil(curr_state, curr_cost, visited, stack):
+            if curr_state.solved():
                 return StateGraph.reconstruct_path(curr_state, predecessors), curr_cost
+
+            for nbor in StateGraph.next_states(curr_state):
+                stack.append((nbor['maze'], curr_cost+nbor['cost'], curr_state, curr_depth+1))
         return False
-
-    def _DFSUtil(node, cost, visited, stack):
-        if node.solved():
-            return True
-
-        visited.add(node)
-        for nbor in StateGraph.next_states(node):
-            if nbor['maze'] not in visited:
-                stack.append((nbor['maze'], cost+nbor['cost'], node))
 
     def astar(self, heuristic=Maze.euclid_dist):
         predecessors = {self.root: None}
         costs = defaultdict(lambda: float("INF"))
         costs[self.root] = 0
         heap = [(0, self.root)]
+
         while heap:
             curr_cost, curr_node = heappop(heap)
             if curr_node.solved():
