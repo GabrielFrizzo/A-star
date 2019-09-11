@@ -28,4 +28,7 @@ Map format:
 
 executing(python > 3.4):
 
-python state_graph.py testes/teste1
+python main.py {TEST FILE NAME}
+
+ex:
+python main.py testes/teste1
