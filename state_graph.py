@@ -27,7 +27,7 @@ class StateGraph:
 
         while stack:
             curr_state, curr_cost, pred, curr_depth = stack.pop()
-            if curr_cost > costs[curr_state] or curr_depth > depth:
+            if curr_cost > costs[curr_state]:
                 continue
             predecessors[curr_state] = pred
             costs[curr_state] = curr_cost
@@ -36,7 +36,8 @@ class StateGraph:
                 return StateGraph.reconstruct_path(curr_state, predecessors), curr_cost
 
             for nbor in StateGraph.next_states(curr_state):
-                stack.append((nbor['maze'], curr_cost+nbor['cost'], curr_state, curr_depth+1))
+                if curr_depth < depth:
+                    stack.append((nbor['maze'], curr_cost+nbor['cost'], curr_state, curr_depth+1))
         return False
 
     def astar(self, heuristic=Maze.euclid_dist):
